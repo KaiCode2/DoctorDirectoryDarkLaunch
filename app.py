@@ -34,11 +34,21 @@ HOST = '0.0.0.0'
 app = Flask(__name__)
 app.secret_key = 'adLSKHfailuSHBdiscilhgdlfahiuwedscn,zishelfahweif;hcxz.vihaw'
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return '404: Page not found'
 
-
-@app.route('/')
-def index():
+@app.route('/all')
+def all():
 	return jsonify(header='handouts', results=DATA)
+
+@app.route('/<illness>')
+def route(illness):
+    for entry in DATA:
+        if entry['name'] == illness:
+            return jsonify(header='results', results=entry)
+    return page_not_found(404)
+
 
 if __name__ == '__main__':
 	app.run(host=HOST, port=PORT)
